@@ -26,7 +26,7 @@ async function runWithPath(fn: (input: string) => unknown, path: string) {
   const { inputPath, outputPath } = getPaths(path);
   const input = await Deno.readTextFile(inputPath);
   const output = fn(input);
-  if (!output) {
+  if (output === undefined || output === null) {
     console.warn("⚠️ The function did not return anything");
     return;
   }
