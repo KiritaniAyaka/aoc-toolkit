@@ -1,5 +1,6 @@
 import { basename, join } from "@std/path";
 import { existsSync } from "@std/fs";
+import { outputToString } from "./utils.ts";
 
 export async function solve(fn: (input: string) => unknown) {
   let path = new URL(Deno.mainModule).pathname;
@@ -19,23 +20,6 @@ function getPaths(path: string) {
   const inputPath = inputFiles.find((file) => existsSync(file));
   if (!inputPath) throw new Error("No input file found");
   return { inputPath, outputPath: join(path, "..", name + ".out") };
-}
-
-async function outputToString(output: unknown): Promise<string> {
-  try {
-    const result = output instanceof Promise ? await output : output;
-    if (typeof result === "string") {
-      return result;
-    }
-    if (typeof result === "object" && "toString" in result) {
-      return outputToString(result.toString());
-    }
-    return String(result);
-  } catch (e: unknown) {
-    throw new Error(
-      `Could not convert output to string: ${output}\n\tError: ${e}`,
-    );
-  }
 }
 
 async function runWithPath(fn: (input: string) => unknown, path: string) {

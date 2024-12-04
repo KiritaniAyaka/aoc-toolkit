@@ -1,10 +1,16 @@
 {
   "name": "@kiritaniayaka/aoc-toolkit",
   "version": "0.1.0",
-  "exports": "./mod.ts",
+  "exports": {
+    ".": "./mod.ts",
+    "./run": "./run.ts",
+    "./clean": "./clean.ts",
+    "./new": "./new.ts"
+  },
   "tasks": {},
   "license": "MIT",
   "imports": {
+    "@std/cli": "jsr:@std/cli@^1.0.7",
     "@std/fs": "jsr:@std/fs@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.8"
   }
