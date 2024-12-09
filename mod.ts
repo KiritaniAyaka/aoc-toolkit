@@ -1,6 +1,6 @@
 import { basename, join } from "@std/path";
 import { existsSync } from "@std/fs";
-import { outputToString } from "./utils.ts";
+import { writeOutput } from "./utils.ts";
 
 export async function solve(fn: (input: string) => unknown) {
   let path = new URL(Deno.mainModule).pathname;
@@ -26,9 +26,5 @@ async function runWithPath(fn: (input: string) => unknown, path: string) {
   const { inputPath, outputPath } = getPaths(path);
   const input = await Deno.readTextFile(inputPath);
   const output = fn(input);
-  if (output === undefined || output === null) {
-    console.warn("⚠️ The function did not return anything");
-    return;
-  }
-  return Deno.writeTextFile(outputPath, await outputToString(output));
+  return await writeOutput(outputPath, output);
 }

@@ -63,7 +63,7 @@ function aoc {
 deno run -A jsr:@kiritaniayaka/aoc-toolkit/new
 ```
 
-It automatically indicates what day you are going.
+It automatically predicts what day you are going.
 
 Or specify days with:
 

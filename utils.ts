@@ -1,11 +1,16 @@
-export async function outputToString(output: unknown): Promise<string> {
+async function outputToString(output: unknown): Promise<string> {
   try {
     const result = output instanceof Promise ? await output : output;
     if (typeof result === "string") {
       return result;
     }
-    if (typeof result === "object" && "toString" in result) {
-      return outputToString(result.toString());
+    if (typeof result === "object") {
+      if (Object.hasOwn(result, "toString")) {
+        return outputToString(result.toString());
+      } else if (Object.hasOwn(result, "valueOf")) {
+        return outputToString(result.valueOf());
+      }
+      return JSON.stringify(result);
     }
     return String(result);
   } catch (e: unknown) {
@@ -13,6 +18,15 @@ export async function outputToString(output: unknown): Promise<string> {
       `Could not convert output to string: ${output}\n\tError: ${e}`,
     );
   }
+}
+
+export async function writeOutput(path: string, output: unknown) {
+  if (output === undefined || output === null) {
+    console.warn("⚠️ The function did not return anything");
+    return;
+  }
+  const stringOutput = await outputToString(output);
+  return Deno.writeTextFile(path, stringOutput);
 }
 
 export async function scanDir(dir: string, part?: string) {

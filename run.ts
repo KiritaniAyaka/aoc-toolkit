@@ -1,7 +1,7 @@
 #!/usr/bin/env -S deno run --allow-read
 import { parseArgs } from "@std/cli/parse-args";
 import { basename, join, resolve } from "@std/path";
-import { outputToString, scanDir, stringArg } from "./utils.ts";
+import { scanDir, stringArg, writeOutput } from "./utils.ts";
 
 const { _: args, silent } = parseArgs(Deno.args, {
   boolean: ["silent"],
@@ -53,7 +53,7 @@ for (let i = 0; i < inputFiles.length; i++) {
       break; // skip this part
     }
     const output = mod.solve(input);
-    await Deno.writeTextFile(outputFile, await outputToString(output));
+    await writeOutput(outputFile, output);
     !silent && console.log(
       `Done...\t\t${partsFiles[j]}.ts => ${basename(outputFile)} (Total ${
         new Date().getTime() - time
